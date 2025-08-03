@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Calendar, Users, Square, ArrowRight, Filter } from 'lucide-react';
+import { MapPin, Calendar, Users, Square, ArrowRight, Filter, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import villaImage from '@/assets/villa-project.jpg';
 import interiorImage from '@/assets/interior-design.jpg';
 import salonImage from '@/assets/salon-project.jpg';
 import commercialImage from '@/assets/commercial-project.jpg';
 import landscapeImage from '@/assets/landscape-project.jpg';
+import heroImage from '@/assets/hero-architecture.jpg';
 
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('All');
+  const [isVisible, setIsVisible] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    setIsVisible(true);
+
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const projects = [
     {
@@ -95,45 +110,89 @@ const Projects = () => {
 
   const categories = ['All', 'Residential', 'Commercial', 'Interior Design', 'Landscape'];
 
-  const filteredProjects = activeFilter === 'All' 
-    ? projects 
+  const filteredProjects = activeFilter === 'All'
+    ? projects
     : projects.filter(project => project.category === activeFilter);
 
   return (
-    <div className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-r from-navy to-charcoal text-white">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Our Portfolio
-            </h1>
-            <p className="text-xl md:text-2xl leading-relaxed opacity-90">
-              Explore our collection of exceptional architectural and interior design projects 
+    <div className="min-h-screen">
+      {/* Hero Section with Homepage Theme */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image with Parallax Effect */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${heroImage})`,
+            transform: `translateY(${scrollY * 0.3}px) scale(1.1)`,
+            willChange: 'transform'
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-charcoal/80 via-charcoal/60 to-charcoal/80"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center">
+          <div className={`transition-all duration-1000 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+            {/* Tagline */}
+            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-4 sm:mb-6 md:mb-8">
+              <Star className="w-3 h-3 sm:w-4 sm:h-4 text-gold" />
+              <span className="text-white text-xs sm:text-sm font-clean-medium">Exceptional Design Portfolio</span>
+            </div>
+
+            {/* Main Headline */}
+            <div className="relative mb-4 sm:mb-6 md:mb-8">
+              <h1
+                className="font-main-heading text-gold relative z-20"
+                style={{
+                  fontSize: 'clamp(3rem, 6vw, 8rem)',
+                  lineHeight: '0.8'
+                }}
+              >
+                Our Projects
+              </h1>
+
+              <div
+                className="text-white font-bold font-sans relative z-10"
+                style={{
+                  fontSize: 'clamp(1.5rem, 3vw, 4rem)',
+                  marginTop: '-0.3em'
+                }}
+              >
+                Crafted with Passion
+              </div>
+            </div>
+
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white mb-6 sm:mb-8 md:mb-10 max-w-2xl sm:max-w-3xl mx-auto leading-relaxed px-4 font-paragraph">
+              Explore our collection of exceptional architectural and interior design projects
               that showcase our commitment to excellence and innovation.
             </p>
           </div>
         </div>
+
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 border border-gold/30 rounded-full animate-pulse hidden lg:block"></div>
+        <div className="absolute bottom-32 right-16 w-16 h-16 bg-gold/20 rounded-lg rotate-45 animate-pulse hidden lg:block"></div>
       </section>
 
       {/* Filter Bar */}
-      <section className="py-8 bg-background border-b">
+      <section className="py-12 bg-charcoal/90 backdrop-blur-md border-b border-gold/20">
         <div className="container mx-auto px-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <Filter className="w-5 h-5 text-muted-foreground" />
-              <span className="text-foreground font-medium">Filter by:</span>
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <div className="flex items-center space-x-3">
+              <Filter className="w-5 h-5 text-gold" />
+              <span className="text-white font-sub-heading text-lg">Filter by:</span>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {categories.map((category) => (
                 <Button
                   key={category}
-                  variant={activeFilter === category ? "default" : "outline"}
+                  variant="outline"
                   size="sm"
                   onClick={() => setActiveFilter(category)}
-                  className={activeFilter === category 
-                    ? "bg-gold hover:bg-gold-light text-white" 
-                    : "hover:bg-gold hover:text-white transition-premium"
+                  className={activeFilter === category
+                    ? "bg-gold border-gold text-white hover:bg-gold-light font-clean-medium"
+                    : "border-gold/30 text-gold hover:bg-gold hover:text-white transition-all duration-500 font-clean-medium"
                   }
                 >
                   {category}
@@ -145,18 +204,21 @@ const Projects = () => {
       </section>
 
       {/* Projects Grid */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-charcoal">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {filteredProjects.map((project, index) => (
-              <Card 
-                key={project.id} 
-                className="overflow-hidden hover-lift transition-premium shadow-premium animate-slide-up group"
-                style={{ animationDelay: `${index * 0.1}s` }}
+              <Card
+                key={project.id}
+                className="overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 hover:border-gold/30 transition-all duration-700 ease-out transform hover:scale-105 hover:shadow-2xl group animate-fade-in"
+                style={{
+                  animationDelay: `${index * 0.2}s`,
+                  animationFillMode: 'both'
+                }}
               >
                 <div className="relative overflow-hidden h-80">
-                  <img 
-                    src={project.image} 
+                  <img
+                    src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-premium"
                   />
@@ -164,10 +226,10 @@ const Projects = () => {
                     <Badge className="bg-gold text-white">
                       {project.category}
                     </Badge>
-                    <Badge 
+                    <Badge
                       variant={project.status === 'Completed' ? 'default' : 'secondary'}
-                      className={project.status === 'Completed' 
-                        ? 'bg-green-500 text-white' 
+                      className={project.status === 'Completed'
+                        ? 'bg-green-500 text-white'
                         : 'bg-orange-500 text-white'
                       }
                     >
@@ -175,13 +237,13 @@ const Projects = () => {
                     </Badge>
                   </div>
                 </div>
-                
+
                 <CardContent className="p-8 space-y-6">
                   <div>
-                    <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-gold transition-premium">
+                    <h3 className="text-2xl font-sub-heading text-white mb-2 group-hover:text-gold transition-all duration-500">
                       {project.title}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-white/70 leading-relaxed font-paragraph">
                       {project.description}
                     </p>
                   </div>
@@ -190,41 +252,43 @@ const Projects = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center space-x-2">
                       <MapPin className="w-4 h-4 text-gold" />
-                      <span className="text-sm text-muted-foreground">{project.location}</span>
+                      <span className="text-sm text-white/60 font-clean">{project.location}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Calendar className="w-4 h-4 text-gold" />
-                      <span className="text-sm text-muted-foreground">{project.year}</span>
+                      <span className="text-sm text-white/60 font-clean">{project.year}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Square className="w-4 h-4 text-gold" />
-                      <span className="text-sm text-muted-foreground">{project.size}</span>
+                      <span className="text-sm text-white/60 font-clean">{project.size}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Users className="w-4 h-4 text-gold" />
-                      <span className="text-sm text-muted-foreground">{project.clients}</span>
+                      <span className="text-sm text-white/60 font-clean">{project.clients}</span>
                     </div>
                   </div>
 
                   {/* Features */}
                   <div>
-                    <h4 className="font-semibold text-foreground mb-3">Key Features:</h4>
+                    <h4 className="font-sub-heading text-gold mb-3">Key Features:</h4>
                     <div className="flex flex-wrap gap-2">
                       {project.features.map((feature) => (
-                        <Badge key={feature} variant="outline" className="text-xs">
+                        <Badge key={feature} variant="outline" className="text-xs border-gold/30 text-gold hover:bg-gold hover:text-white transition-all duration-300">
                           {feature}
                         </Badge>
                       ))}
                     </div>
                   </div>
 
-                  <Button 
-                    variant="outline" 
-                    className="w-full group-hover:bg-gold group-hover:text-white group-hover:border-gold transition-premium"
-                  >
-                    View Project Details
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  <Link to={`/projects/${project.id}`}>
+                    <Button
+                      variant="outline"
+                      className="w-full bg-transparent border-gold/30 text-gold hover:bg-gold hover:text-white hover:border-gold transition-all duration-500 font-clean-medium"
+                    >
+                      View Project Details
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -232,8 +296,8 @@ const Projects = () => {
 
           {/* Load More */}
           <div className="text-center mt-16">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="outline"
               className="border-gold text-gold hover:bg-gold hover:text-white"
             >
@@ -244,31 +308,35 @@ const Projects = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-charcoal">
         <div className="container mx-auto px-6">
-          <div className="bg-gradient-to-r from-gold to-gold-light p-12 rounded-2xl text-white text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <div className="bg-gradient-to-r from-gold to-gold-light p-12 rounded-2xl text-white text-center max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-main-heading mb-6">
               Ready to Create Your Dream Project?
             </h2>
-            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-              Let's discuss how we can bring your vision to life with our expertise 
+            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto font-paragraph">
+              Let's discuss how we can bring your vision to life with our expertise
               in architecture and interior design.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                variant="secondary"
-                className="bg-white text-gold hover:bg-gray-100"
-              >
-                Start Your Project
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-white text-white hover:bg-white/10"
-              >
-                Schedule Consultation
-              </Button>
+              <Link to="/contact">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="bg-white text-gold hover:bg-gray-100 font-clean-medium"
+                >
+                  Start Your Project
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white text-white hover:bg-white/10 font-clean-medium"
+                >
+                  Schedule Consultation
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
