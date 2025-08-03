@@ -44,11 +44,29 @@ const Hero = () => {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-7xl sm:text-9xl md:text-8xl lg:text-9xl xl:text-[10rem] font-main-heading text-gold mb-4 sm:mb-6 md:mb-8 leading-tight">
-            Luxury & Comfort
-            <br />
-            <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white font-bold font-sans">Passionate Living Spaces</span>
-          </h1>
+          <div className="relative mb-4 sm:mb-6 md:mb-8">
+            {/* Main Heading - On Top */}
+            <h1
+              className="font-main-heading text-gold relative z-20"
+              style={{
+                fontSize: 'clamp(4rem, 8vw, 10rem)',
+                lineHeight: '0.8'
+              }}
+            >
+              Luxury & Comfort
+            </h1>
+
+            {/* Sub Heading - Below */}
+            <div
+              className="text-white font-bold font-sans relative z-10"
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 6rem)',
+                marginTop: '-0.5em' // Slight overlap
+              }}
+            >
+              Passionate Living Spaces
+            </div>
+          </div>
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white mb-6 sm:mb-8 md:mb-10 max-w-2xl sm:max-w-3xl mx-auto leading-relaxed px-4 font-paragraph">
